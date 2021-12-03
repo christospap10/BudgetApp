@@ -155,6 +155,12 @@ var UIController = (function () {
     return (type === "exp" ? "-" : "+") + int + "." + dec; //+ or - before the number
   };
 
+  var nodeListForEach = function (list, callback) {
+    for (var i = 0; i < list.length; i++) {
+      callback(list[i], i);
+    }
+  };
+
   return {
     getInput: function () {
       return {
@@ -266,6 +272,20 @@ var UIController = (function () {
         months[month] + " " + year;
     },
 
+    changedType: function () {
+      var fields = document.querySelectorAll(
+        DOMstrings.inputType +
+          "," +
+          DOMstrings.inputDescription +
+          "," +
+          DOMstrings.inputValue
+      );
+      nodeListForEach(fields, function (cur) {
+        cur.classList.toggle("red-focus");
+      });
+      document.querySelector(DOMstrings.inputBtn).classList.toggle("red");
+    },
+
     getDOMstrings: function () {
       return DOMstrings;
     },
@@ -288,7 +308,11 @@ var controller = (function (budgetCtrl, UICtrl) {
     document
       .querySelector(DOM.container)
       .addEventListener("click", ctrlDeleteItem);
+    document
+      .querySelector(DOM.inputType)
+      .addEventListener("change", UICtrl.changedType);
   };
+
   var updatePercentages = function () {
     //calculate percentages
     budgetCtrl.calculatePercentages();
@@ -367,3 +391,4 @@ var controller = (function (budgetCtrl, UICtrl) {
 })(budgetController, UIController);
 
 controller.init(); //initiatlize the app
+//PART 4: 57:37 finish the app
